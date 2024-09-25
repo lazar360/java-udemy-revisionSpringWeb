@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category updateCategory(Category category, Long categoryId) {
-        Optional<Category> optionalCategory = categories.stream()
+        /*Optional<Category> optionalCategory = categories.stream()
                 .filter(c -> c.getCategoryId().equals(categoryId))
                 .findFirst();
 
@@ -48,6 +48,14 @@ public class CategoryServiceImpl implements CategoryService {
             return existingCategory;
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found");
-        }
+        }*/
+        return categories.stream()
+                .filter(c -> c.getCategoryId().equals(categoryId))
+                .findFirst()
+                .map(existingCategory -> {
+                    existingCategory.setCategoryName(category.getCategoryName());
+                    return existingCategory;
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found"));
     }
 }
