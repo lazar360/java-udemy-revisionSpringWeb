@@ -1,9 +1,12 @@
 package app.ecommerce.sb_ecom.model;
 
-import java.util.UUID;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
+@Entity
 public class Category {
 
+    @Id
     private Long categoryId;
     private String categoryName;
 
