@@ -20,7 +20,7 @@ public class MyGlobalExceptionHandler {
         Map<String, String> response = new HashMap<>();
         e.getBindingResult().getAllErrors().forEach(err -> {
             String fieldName = ((FieldError)err).getField();
-            String message = Arrays.toString(e.getDetailMessageArguments()).replaceAll("[\\[\\]:,]", "");
+            String message = Arrays.toString(e.getDetailMessageArguments()).replaceAll("[\\[\\],]", "");
             response.put(fieldName, message.substring(0,2).toUpperCase() + message.substring(2));
         });
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
