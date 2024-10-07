@@ -1,5 +1,6 @@
 package app.ecommerce.sb_ecom.service;
 
+import app.ecommerce.sb_ecom.exceptions.ResourceNotFoundException;
 import app.ecommerce.sb_ecom.model.Category;
 import app.ecommerce.sb_ecom.repositories.CategoryRepository;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.findById(categoryId).map(existingCategory -> {
             categoryRepository.deleteById(categoryId);
             return existingCategory;
-        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found"));
+        }).orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
         return "Category with categoryId: " + categoryId + " deleted successfully";
     }
 
@@ -44,6 +45,6 @@ public class CategoryServiceImpl implements CategoryService {
                     category.setCategoryId(categoryId);
                     return categoryRepository.save(category);
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
         }
 }
