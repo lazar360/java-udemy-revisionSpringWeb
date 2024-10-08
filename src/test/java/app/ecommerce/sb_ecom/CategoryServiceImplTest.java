@@ -31,7 +31,7 @@ public class CategoryServiceImplTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        category1 = new Category("category1");
+        category1 = new Category(1L, "category1");
     }
 
     @Test
@@ -65,7 +65,6 @@ public class CategoryServiceImplTest {
     @Test
     public void shouldDeleteCategory(){
         // Arrange
-        category1.setCategoryId(1L); // Ensure the categoryId is set
         when(categoryRepository.findById(category1.getCategoryId()))
                 .thenReturn(Optional.of(category1));
 
