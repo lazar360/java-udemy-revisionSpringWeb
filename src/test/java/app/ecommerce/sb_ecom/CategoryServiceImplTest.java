@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-
+// TODO : make the tests for exceptions
 public class CategoryServiceImplTest {
 
     @Mock
@@ -36,8 +36,8 @@ public class CategoryServiceImplTest {
 
     @Test
     public void shouldCreateCategory() {
-        categoryService.createCategory(category1);
         when(categoryRepository.findAll()).thenReturn(List.of(category1));
+        categoryService.createCategory(category1);
         assertEquals(1, categoryService.getAllCategories().size());
     }
 
