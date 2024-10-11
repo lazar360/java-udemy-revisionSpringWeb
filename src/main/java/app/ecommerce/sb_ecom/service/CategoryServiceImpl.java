@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -48,12 +49,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public String deleteCategory(Long categoryId) {
-        categoryRepository.findById(categoryId).map(existingCategory -> {
+    public CategoryDTO deleteCategory(Long categoryId) {
+        Category deletedCategory = categoryRepository.findById(categoryId).map(existingCategory -> {
             categoryRepository.deleteById(categoryId);
             return existingCategory;
         }).orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
-        return "Category with categoryId: " + categoryId + " deleted successfully";
+
+        return modelMapper.map(deletedCategory, CategoryDTO.class);
     }
 
     @Override

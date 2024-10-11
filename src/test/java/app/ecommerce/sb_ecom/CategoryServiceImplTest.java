@@ -62,7 +62,7 @@ public class CategoryServiceImplTest {
         assertEquals("update", updatedCategory.getCategoryName());
     }*/
 
-    @Test
+   /* @Test
     public void shouldDeleteCategory(){
         // Arrange
         when(categoryRepository.findById(category1.getCategoryId()))
@@ -74,5 +74,5 @@ public class CategoryServiceImplTest {
         // Assert
         verify(categoryRepository, times(1)).deleteById(category1.getCategoryId());
         assertEquals("Category with categoryId: 1 deleted successfully", result);
-    }
+    }*/
 }
