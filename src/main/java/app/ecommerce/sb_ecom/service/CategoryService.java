@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 
 public interface CategoryService {
 
-    CategoryResponse getAllCategories();
+    CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize);
     CategoryDTO createCategory(@Valid CategoryDTO categoryDTO);
     CategoryDTO deleteCategory(Long categoryId);
     CategoryDTO updateCategory(CategoryDTO categoryDTO, Long categoryId);
