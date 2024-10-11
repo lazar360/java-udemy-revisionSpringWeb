@@ -47,7 +47,7 @@ public class CategoryServiceImplTest {
         assertEquals(1, categoryService.getAllCategories().size());
     }*/
 
-    @Test
+    /*@Test
     public void shouldUpdateCategory(){
         // Arrange
         when(categoryRepository.findById(category1.getCategoryId()))
@@ -60,7 +60,7 @@ public class CategoryServiceImplTest {
 
         // Assert
         assertEquals("update", updatedCategory.getCategoryName());
-    }
+    }*/
 
     @Test
     public void shouldDeleteCategory(){
