@@ -1,14 +1,14 @@
 package app.ecommerce.sb_ecom.service;
 
 import app.ecommerce.sb_ecom.model.Category;
+import app.ecommerce.sb_ecom.payload.CategoryDTO;
 import app.ecommerce.sb_ecom.payload.CategoryResponse;
-
-import java.util.List;
+import jakarta.validation.Valid;
 
 public interface CategoryService {
 
     CategoryResponse getAllCategories();
-    void createCategory(Category category);
+    CategoryDTO createCategory(@Valid CategoryDTO categoryDTO);
     String deleteCategory(Long categoryId);
     Category updateCategory(Category category, Long categoryId);
 }

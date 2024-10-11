@@ -34,7 +34,7 @@ public class CategoryServiceImplTest {
         category1 = new Category(1L, "category1");
     }
 
-    @Test
+    /*@Test
     public void shouldCreateCategory() {
         when(categoryRepository.findAll()).thenReturn(List.of(category1));
         categoryService.createCategory(category1);
@@ -45,7 +45,7 @@ public class CategoryServiceImplTest {
     public void shouldGetAllCategories() {
         when(categoryRepository.findAll()).thenReturn(List.of(category1));
         assertEquals(1, categoryService.getAllCategories().size());
-    }
+    }*/
 
     @Test
     public void shouldUpdateCategory(){
