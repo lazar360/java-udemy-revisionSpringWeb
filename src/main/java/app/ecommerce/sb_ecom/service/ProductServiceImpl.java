@@ -4,33 +4,44 @@ import app.ecommerce.sb_ecom.exceptions.ResourceNotFoundException;
 import app.ecommerce.sb_ecom.model.Category;
 import app.ecommerce.sb_ecom.model.Product;
 import app.ecommerce.sb_ecom.payload.ProductDTO;
+import app.ecommerce.sb_ecom.payload.ProductResponse;
 import app.ecommerce.sb_ecom.repositories.CategoryRepository;
 import app.ecommerce.sb_ecom.repositories.ProductRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductServiceImpl implements ProductService{
 
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ModelMapper modelMapper) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public ProductDTO addProduct(Long categoryId, Product product) {
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+
         product.setImage("default.png");
         product.setCategory(category);
-        double specialPrice = product.getPrice() * (1 - product.getDiscount() * 0.01);
-        product.setSpecialPrice(specialPrice);
-        Product savedProduct = productRepository.save(product);
-        return modelMapper.map(savedProduct, ProductDTO.class);
+        product.setSpecialPrice(product.getPrice() * (1 - product.getDiscount() * 0.01));
+
+        return modelMapper.map(productRepository.save(product), ProductDTO.class);
+    }
+
+    @Override
+    public ProductResponse getAllProducts() {
+        return new ProductResponse(
+                productRepository.findAll().stream()
+                        .map(product -> modelMapper.map(product, ProductDTO.class))
+                        .toList()
+        );
     }
 }
