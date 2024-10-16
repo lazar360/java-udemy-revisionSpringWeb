@@ -10,6 +10,8 @@ import app.ecommerce.sb_ecom.repositories.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class ProductServiceImpl implements ProductService{
 
@@ -40,6 +42,18 @@ public class ProductServiceImpl implements ProductService{
     public ProductResponse getAllProducts() {
         return new ProductResponse(
                 productRepository.findAll().stream()
+                        .map(product -> modelMapper.map(product, ProductDTO.class))
+                        .toList()
+        );
+    }
+
+    @Override
+    public ProductResponse searchByCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+
+        return new ProductResponse(
+                productRepository.findByCategoryOrderByPriceAsc(category).stream()
                         .map(product -> modelMapper.map(product, ProductDTO.class))
                         .toList()
         );
