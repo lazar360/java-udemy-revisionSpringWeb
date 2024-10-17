@@ -8,6 +8,7 @@ import app.ecommerce.sb_ecom.payload.ProductResponse;
 import app.ecommerce.sb_ecom.repositories.CategoryRepository;
 import app.ecommerce.sb_ecom.repositories.ProductRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,10 +27,18 @@ public class ProductServiceImpl implements ProductService{
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ModelMapper modelMapper) {
+    private final FileService fileService;
+
+    @Value("${project.image}")
+    private String path;
+
+
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ModelMapper modelMapper, FileService fileService) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.modelMapper = modelMapper;
+        this.fileService = fileService;
+
     }
 
     @Override
@@ -106,12 +115,8 @@ public class ProductServiceImpl implements ProductService{
         Product productFromDb = productRepository.findById(productId)
                 .orElseThrow(()->new ResourceNotFoundException("Product", "product", productId));
 
-        // upload the image
-
-
         // get the filename of uploaded image
-        String path = "images/";
-        String fileName = uploadImage(path, image);
+        String fileName = fileService.uploadImage(path, image);
 
         // updating the new file name to the product
         productFromDb.setImage(fileName);
@@ -123,23 +128,5 @@ public class ProductServiceImpl implements ProductService{
         return modelMapper.map(updatedProduct, ProductDTO.class);
     }
 
-    private String uploadImage(String path, MultipartFile file) throws IOException {
-        // file names of current / original file
-        String originalFileName = file.getOriginalFilename();
 
-        //  generate a unique file name
-        String randomId = UUID.randomUUID().toString();
-        assert originalFileName != null;
-        String fileName = randomId.concat(originalFileName.substring(originalFileName.lastIndexOf('.')));
-        String filePath = path + File.separator + fileName;
-
-        // check if path exist and create
-        File folder = new File(path);
-        if (!folder.exists()) folder.mkdir();
-
-        // upload to server
-        Files.copy(file.getInputStream(), Paths.get(filePath));
-
-        return fileName;
-    }
 }
