@@ -127,11 +127,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private Pageable getPageable(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+        return PageRequest.of(pageNumber, pageSize, sortOrder.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
-
-        return PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+                : Sort.by(sortBy).descending());
     }
 
     private ProductResponse getProductResponse(Page<Product> pageProducts) {
@@ -142,18 +140,15 @@ public class ProductServiceImpl implements ProductService {
             throw new APIException("No product in database");
         }
 
-        List<ProductDTO> productDTOS = products.stream()
-                .map(product -> modelMapper.map(product, ProductDTO.class))
-                .toList();
-
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(productDTOS);
-        productResponse.setPageNumber(pageProducts.getNumber());
-        productResponse.setPageSize(pageProducts.getSize());
-        productResponse.setTotalElement(pageProducts.getTotalElements());
-        productResponse.setTotalPages(pageProducts.getTotalPages());
-        productResponse.setLastPage(pageProducts.isLast());
-
-        return productResponse;
+        return new ProductResponse(
+                products.stream()
+                        .map(product -> modelMapper.map(product, ProductDTO.class))
+                        .toList(),
+                pageProducts.getNumber(),
+                pageProducts.getSize(),
+                pageProducts.getTotalElements(),
+                pageProducts.getTotalPages(),
+                pageProducts.isLast()
+        );
     }
 }
